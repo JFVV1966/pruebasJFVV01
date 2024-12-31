@@ -1,3 +1,43 @@
-Hola
-Hola
-Hola
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<TITLE>Prueba proxy PHP hacia NodeJS</TITLE>
+<meta charset="utf-8" />
+
+<script>
+	//const servidor = 'localhost'
+	//const puerto = 8081
+	const url = 'proxy.php'
+	function inicializarPagina() {
+		document.getElementById("btn_entrada").addEventListener("click", async e=>{
+			const query_params = document.getElementById("txt_entrada").value
+			const url_request = `${url}?${query_params}`;
+			let respuesta
+			respuesta = await fetch(url_request).catch(e=>{respuesta = `ERROR = ${e}`})
+			let txt
+			if (respuesta.ok && respuesta.status == 200) {
+				txt = await respuesta.text()
+			} else {
+				txt = respuesta ? `ERROR. Respuesta con Status ${respuesta.status == 200}` : `ERROR. No hay respuesta`
+			}
+			document.getElementById("txt_respuesta").value = txt
+		});
+	}
+</script>
+</head>
+
+<body id="miPagina" onload="inicializarPagina()">
+
+	<H1>Prueba PROXY PHP >> NodeJS </H1>
+
+	<H3>A partir de un texto de entrada en formato querystring pasado a un pgm PHP, éste llama a un pgm NodeJS, quien devuelve al respuesta</H3>
+
+	<textarea id="txt_entrada" rows="10" cols="80" placeholder="Introduce texto en formato Querystring"></textarea>
+	<br/>
+	<textarea id="txt_respuesta" rows="10" cols="80" placeholder="Aquí aparecerá la respuesta"></textarea>
+	<br/><br/>
+	<button id="btn_entrada">ENVIAR</button>
+
+</body>
+</html>
